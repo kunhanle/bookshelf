@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我的書架 · 沉浸式閱讀</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#141519; --bg2:#1b1d23; --card:#22242c; --text:#e7e2d8; --text2:#b0a99e; --muted:#7c766c;
+  --accent:#c7a45e; --border:rgba(199,164,94,0.16);
+  --serif:'Noto Serif TC','Songti TC',serif; --sans:'Noto Sans TC','Microsoft JhengHei',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--serif); color:var(--text); min-height:100vh; overflow-x:hidden;
+  background:
+    radial-gradient(ellipse at 50% -10%, rgba(199,164,94,0.10) 0%, transparent 55%),
+    radial-gradient(ellipse at 90% 100%, rgba(110,130,160,0.08) 0%, transparent 55%),
+    linear-gradient(to bottom, #16171c 0%, var(--bg) 60%, #101116 100%);
+}
+::-webkit-scrollbar{width:6px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px;}
+
+/* loading */
+#loader{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:var(--bg);transition:opacity .6s ease,visibility .6s ease;}
+#loader.hide{opacity:0;visibility:hidden;}
+#loader .seal{font-size:2rem;color:var(--accent);letter-spacing:.4em;font-weight:300;}
+
+header.shelf-head{text-align:center;padding:5.5rem 1.5rem 1rem;}
+header.shelf-head .mark{
+  display:inline-flex;width:56px;height:56px;border:1.5px solid var(--accent);border-radius:6px;
+  align-items:center;justify-content:center;color:var(--accent);font-size:1.5rem;margin-bottom:1.6rem;font-weight:300;
+  opacity:0;animation:rise .9s ease .1s forwards;
+}
+header.shelf-head h1{
+  font-size:clamp(2rem,5vw,3rem);font-weight:300;letter-spacing:.32em;padding-left:.32em;
+  color:var(--text);opacity:0;animation:rise 1s ease .25s forwards;text-shadow:0 0 40px rgba(199,164,94,.2);
+}
+header.shelf-head .divider{width:64px;height:1px;background:var(--accent);margin:1.4rem auto;opacity:0;animation:rise 1s ease .4s forwards;}
+header.shelf-head p{color:var(--muted);font-size:.9rem;letter-spacing:.28em;font-family:var(--sans);opacity:0;animation:rise 1s ease .5s forwards;}
+@keyframes rise{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:none;}}
+
+.shelf{
+  max-width:1080px;margin:2.5rem auto 1rem;padding:0 2rem 1.5rem;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:2rem 1.8rem;
+  align-items:end;
+}
+.book{
+  position:relative;cursor:pointer;text-decoration:none;display:block;
+  border-radius:10px;overflow:hidden;border:1px solid var(--border);
+  aspect-ratio:3/4;
+  background:linear-gradient(155deg, var(--b-bg) 0%, #0e0f13 140%);
+  box-shadow:0 10px 30px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.02);
+  transform:translateY(0);transition:transform .4s cubic-bezier(.25,.46,.45,.94),box-shadow .4s ease,border-color .4s ease;
+  opacity:0;animation:rise .8s ease forwards;
+}
+.book::before{ /* spine highlight */
+  content:'';position:absolute;top:0;bottom:0;left:0;width:6px;
+  background:linear-gradient(to bottom, var(--b-accent), transparent);opacity:.7;
+}
+.book::after{ /* top sheen */
+  content:'';position:absolute;inset:0;border-radius:10px;
+  background:radial-gradient(ellipse at 30% 0%, rgba(255,255,255,.06), transparent 60%);pointer-events:none;
+}
+.book:hover{transform:translateY(-10px);box-shadow:0 22px 46px rgba(0,0,0,.55),0 0 30px rgba(199,164,94,.10);border-color:var(--b-accent);}
+.book .inner{position:relative;z-index:1;height:100%;padding:1.8rem 1.5rem;display:flex;flex-direction:column;}
+.book .seal{
+  width:46px;height:46px;border:1.5px solid var(--b-accent);border-radius:5px;color:var(--b-accent);
+  display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:300;margin-bottom:1.4rem;
+}
+.book .langs{position:absolute;top:1.5rem;right:1.4rem;display:flex;gap:.35rem;}
+.book .lang{
+  font-family:var(--sans);font-size:.62rem;letter-spacing:.08em;padding:.14rem .42rem;border-radius:20px;
+  color:var(--b-accent);border:1px solid var(--b-accent);opacity:.75;
+}
+.book .title{font-size:1.35rem;font-weight:400;line-height:1.35;color:var(--text);letter-spacing:.04em;}
+.book .title-en{font-family:var(--sans);font-size:.72rem;color:var(--text2);margin-top:.4rem;line-height:1.4;font-style:italic;}
+.book .spacer{flex:1;}
+.book .author{font-family:var(--sans);font-size:.78rem;color:var(--b-accent);letter-spacing:.06em;margin-bottom:.35rem;}
+.book .subtitle{font-family:var(--sans);font-size:.74rem;color:var(--text2);line-height:1.6;}
+.book .tagline{
+  margin-top:.7rem;font-family:var(--sans);font-size:.72rem;color:var(--muted);line-height:1.6;
+  max-height:0;overflow:hidden;opacity:0;transition:max-height .4s ease,opacity .4s ease,margin .4s ease;
+}
+.book:hover .tagline{max-height:60px;opacity:1;}
+.book .open-hint{
+  margin-top:1rem;font-family:var(--sans);font-size:.72rem;color:var(--b-accent);letter-spacing:.1em;
+  opacity:0;transform:translateY(6px);transition:opacity .4s ease,transform .4s ease;
+}
+.book:hover .open-hint{opacity:1;transform:none;}
+
+.shelf-plank{max-width:1080px;margin:0 auto;padding:0 2rem;}
+.shelf-plank .plank{height:2px;background:linear-gradient(90deg,transparent,var(--border),transparent);}
+
+footer{text-align:center;padding:2.5rem 2rem 3.5rem;color:var(--muted);font-size:.78rem;font-family:var(--sans);letter-spacing:.05em;}
+footer .count{color:var(--text2);}
+
+@media (max-width:600px){
+  header.shelf-head{padding-top:4rem;}
+  .shelf{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1.4rem 1.2rem;padding:0 1.2rem 1.2rem;}
+  .book .inner{padding:1.3rem 1.1rem;}
+  .book .title{font-size:1.1rem;}
+}
+</style>
+</head>
+<body>
+<div id="loader"><div class="seal">書 齋</div></div>
+
+<header class="shelf-head">
+  <div class="mark" id="shelf-mark">書</div>
+  <h1 id="shelf-title">我的書架</h1>
+  <div class="divider"></div>
+  <p id="shelf-subtitle">沉浸式閱讀</p>
+</header>
+
+<main class="shelf" id="shelf"></main>
+<div class="shelf-plank"><div class="plank"></div></div>
+<footer><span class="count" id="shelf-count"></span></footer>
+
+<script src="shelf.data.js"></script>
+<script>
+(function () {
+  var S = (typeof SHELF !== 'undefined') ? SHELF : { title: '我的書架', subtitle: '', books: [] };
+  document.getElementById('shelf-title').textContent = S.title || '我的書架';
+  document.getElementById('shelf-subtitle').textContent = S.subtitle || '';
+  var shelf = document.getElementById('shelf');
+  var enc = function (p) { return p.split('/').map(encodeURIComponent).join('/'); };
+
+  (S.books || []).forEach(function (b, i) {
+    var a = document.createElement('a');
+    a.className = 'book';
+    a.href = './' + enc(b.folder) + '/index.html';
+    a.style.setProperty('--b-bg', b.bg || '#1b1d23');
+    a.style.setProperty('--b-accent', b.accent || 'var(--accent)');
+    a.style.animationDelay = (0.15 + i * 0.08) + 's';
+    var langs = (b.langs || []).map(function (l) { return '<span class="lang">' + l + '</span>'; }).join('');
+    a.innerHTML =
+      '<div class="inner">' +
+        '<div class="langs">' + langs + '</div>' +
+        '<div class="seal">' + (b.seal || '書') + '</div>' +
+        '<div class="title">' + b.title + '</div>' +
+        (b.titleEn ? '<div class="title-en">' + b.titleEn + '</div>' : '') +
+        '<div class="spacer"></div>' +
+        '<div class="author">' + (b.author || '') + '</div>' +
+        '<div class="subtitle">' + (b.subtitle || '') + '</div>' +
+        (b.tagline ? '<div class="tagline">' + b.tagline + '</div>' : '') +
+        '<div class="open-hint">翻開 ▸</div>' +
+      '</div>';
+    shelf.appendChild(a);
+  });
+
+  var n = (S.books || []).length;
+  document.getElementById('shelf-count').textContent = '共 ' + n + ' 本 · 點書封翻開';
+
+  window.addEventListener('load', function () {
+    setTimeout(function () { document.getElementById('loader').classList.add('hide'); }, 500);
+  });
+})();
+</script>
+</body>
+</html>
