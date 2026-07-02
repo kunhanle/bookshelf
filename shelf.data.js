@@ -66,6 +66,30 @@ const SHELF = {
       accent: '#c67b45',
       bg: '#17150f',
       langs: ['中', 'EN']
+    },
+    {
+      folder: '活出意義來',
+      title: '活出意義來',
+      titleEn: "Man's Search for Meaning",
+      author: 'Viktor E. Frankl',
+      subtitle: '從集中營到意義治療',
+      tagline: '選擇態度的自由，是最後也最深的自由',
+      seal: '意',
+      accent: '#d6a95c',
+      bg: '#16171b',
+      langs: ['中', 'EN']
+    },
+    {
+      folder: '自私的基因',
+      title: '自私的基因',
+      titleEn: 'The Selfish Gene',
+      author: 'Richard Dawkins',
+      subtitle: '從基因的視角重看生命',
+      tagline: '我們是基因打造的生存機器',
+      seal: '基',
+      accent: '#4fb89a',
+      bg: '#0f1518',
+      langs: ['中', 'EN']
     }
   ]
 };
