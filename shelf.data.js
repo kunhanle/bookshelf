@@ -90,6 +90,18 @@ const SHELF = {
       accent: '#4fb89a',
       bg: '#0f1518',
       langs: ['中', 'EN']
+    },
+    {
+      folder: '刻意練習',
+      title: '刻意練習',
+      titleEn: 'Peak: Secrets from the New Science of Expertise',
+      author: 'Anders Ericsson & Robert Pool',
+      subtitle: '比天賦更關鍵的學習法',
+      tagline: '傑出不是天賦，而是練出來的',
+      seal: '練',
+      accent: '#e0864a',
+      bg: '#14161d',
+      langs: ['中', 'EN']
     }
   ]
 };
