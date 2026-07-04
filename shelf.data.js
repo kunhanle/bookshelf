@@ -23,13 +23,14 @@ const SHELF = {
     {
       folder: '半生緣',
       title: '半生緣',
+      titleEn: 'Half a Lifelong Romance',
       author: '張愛玲',
       subtitle: '時光裡的緣與劫',
       tagline: '一個關於時間與錯過的故事',
       seal: '緣',
       accent: '#c79783',
       bg: '#1a1c22',
-      langs: ['中']
+      langs: ['中', 'EN']
     },
     {
       folder: 'thinking-fast-and-slow',
@@ -101,6 +102,18 @@ const SHELF = {
       seal: '練',
       accent: '#e0864a',
       bg: '#14161d',
+      langs: ['中', 'EN']
+    },
+    {
+      folder: '道德動物',
+      title: '道德動物',
+      titleEn: 'The Moral Animal',
+      author: 'Robert Wright',
+      subtitle: '我們為何如此？',
+      tagline: '演化如何造出一隻懂道德的動物',
+      seal: '演',
+      accent: '#b07d3c',
+      bg: '#171713',
       langs: ['中', 'EN']
     }
   ]
