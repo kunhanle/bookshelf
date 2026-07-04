@@ -115,6 +115,30 @@ const SHELF = {
       accent: '#b07d3c',
       bg: '#171713',
       langs: ['中', 'EN']
+    },
+    {
+      folder: '原子習慣',
+      title: '原子習慣',
+      titleEn: 'Atomic Habits',
+      author: 'James Clear',
+      subtitle: '每天都比昨天好一點',
+      tagline: '微小改變，顯著成果',
+      seal: '習',
+      accent: '#4f8fc9',
+      bg: '#14171d',
+      langs: ['中', 'EN']
+    },
+    {
+      folder: '菊次郎與佐紀',
+      title: '菊次郎與佐紀',
+      titleEn: 'Kikujiro and Saki',
+      author: '北野武',
+      subtitle: '笑淚交織的下町家族',
+      tagline: '一個下町家庭的笑與淚',
+      seal: '菊',
+      accent: '#cb6046',
+      bg: '#1a1613',
+      langs: ['中', 'EN']
     }
   ]
 };
