@@ -43,6 +43,23 @@ header.shelf-head .divider{width:64px;height:1px;background:var(--accent);margin
 header.shelf-head p{color:var(--muted);font-size:.9rem;letter-spacing:.28em;font-family:var(--sans);opacity:0;animation:rise 1s ease .5s forwards;}
 @keyframes rise{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:none;}}
 
+/* category tabs */
+.tabs{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem;
+  max-width:1080px;margin:1.6rem auto .4rem;padding:0 2rem;
+  opacity:0;animation:rise 1s ease .55s forwards;
+}
+.tab{
+  font-family:var(--sans);font-size:.82rem;letter-spacing:.12em;
+  padding:.5rem 1.15rem;border-radius:22px;cursor:pointer;user-select:none;
+  color:var(--text2);background:transparent;border:1px solid var(--border);
+  transition:color .3s ease,border-color .3s ease,background .3s ease;
+}
+.tab:hover{color:var(--text);border-color:var(--accent);}
+.tab.active{color:#141519;background:var(--accent);border-color:var(--accent);font-weight:500;}
+.tab .tab-n{opacity:.55;font-size:.72rem;margin-left:.4em;}
+@media (max-width:600px){ .tabs{padding:0 1.2rem;gap:.45rem;} .tab{font-size:.76rem;padding:.42rem .85rem;letter-spacing:.08em;} }
+
 .shelf{
   max-width:1080px;margin:2.5rem auto 1rem;padding:0 2rem 1.5rem;
   display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:2rem 1.8rem;
@@ -116,6 +133,7 @@ footer .count{color:var(--text2);}
   <p id="shelf-subtitle">沉浸式閱讀</p>
 </header>
 
+<nav class="tabs" id="tabs"></nav>
 <main class="shelf" id="shelf"></main>
 <div class="shelf-plank"><div class="plank"></div></div>
 <footer><span class="count" id="shelf-count"></span></footer>
@@ -128,6 +146,12 @@ footer .count{color:var(--text2);}
   document.getElementById('shelf-subtitle').textContent = S.subtitle || '';
   var shelf = document.getElementById('shelf');
   var enc = function (p) { return p.split('/').map(encodeURIComponent).join('/'); };
+  var books = [];  // { el, cats }
+  var catsOf = function (b) {
+    if (Array.isArray(b.categories)) return b.categories.slice();
+    if (b.category) return [b.category];
+    return [];
+  };
 
   (S.books || []).forEach(function (b, i) {
     var a = document.createElement('a');
@@ -150,10 +174,50 @@ footer .count{color:var(--text2);}
         '<div class="open-hint">翻開 ▸</div>' +
       '</div>';
     shelf.appendChild(a);
+    books.push({ el: a, cats: catsOf(b) });
   });
 
-  var n = (S.books || []).length;
-  document.getElementById('shelf-count').textContent = '共 ' + n + ' 本 · 點書封翻開';
+  // ---- category tabs（分類頁籤）----
+  var counts = {};
+  books.forEach(function (bk) { bk.cats.forEach(function (c) { counts[c] = (counts[c] || 0) + 1; }); });
+  // 頁籤順序：先照 SHELF.categories 列出且有書的，再補上書上出現但沒列到的類別
+  var cats = [];
+  (S.categories || []).forEach(function (c) { if (counts[c] && cats.indexOf(c) < 0) cats.push(c); });
+  Object.keys(counts).forEach(function (c) { if (cats.indexOf(c) < 0) cats.push(c); });
+
+  var tabsEl = document.getElementById('tabs');
+  var total = books.length;
+  var countEl = document.getElementById('shelf-count');
+
+  function applyFilter(key) {
+    books.forEach(function (bk) {
+      var show = (key === 'All') || (bk.cats.indexOf(key) >= 0);
+      bk.el.style.display = show ? '' : 'none';
+    });
+    [].forEach.call(tabsEl.children, function (t) {
+      t.classList.toggle('active', t.getAttribute('data-key') === key);
+    });
+    countEl.textContent = (key === 'All')
+      ? ('共 ' + total + ' 本 · 點書封翻開')
+      : ('「' + key + '」· ' + (counts[key] || 0) + ' 本');
+  }
+
+  if (cats.length) {
+    var tabDefs = [{ key: 'All', label: 'All', n: total }].concat(
+      cats.map(function (c) { return { key: c, label: c, n: counts[c] || 0 }; })
+    );
+    tabDefs.forEach(function (d) {
+      var t = document.createElement('div');
+      t.className = 'tab';
+      t.setAttribute('data-key', d.key);
+      t.innerHTML = d.label + '<span class="tab-n">' + d.n + '</span>';
+      t.addEventListener('click', function () { applyFilter(d.key); });
+      tabsEl.appendChild(t);
+    });
+    applyFilter('All');
+  } else {
+    countEl.textContent = '共 ' + total + ' 本 · 點書封翻開';
+  }
 
   window.addEventListener('load', function () {
     setTimeout(function () { document.getElementById('loader').classList.add('hide'); }, 500);
