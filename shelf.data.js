@@ -25,7 +25,7 @@ const SHELF = {
   title: '我的書架',
   subtitle: '沉浸式閱讀 · Immersive Reading',
   // 分類頁籤（有序）。'All' 由首頁自動加在最前面並預設選中，這裡不用列。
-  categories: ['心理探究', '小說', '科普', '回憶錄', '商業'],
+  categories: ['心理探究', '小說', '科普', '回憶錄', '商業', '科幻'],
   books: [
     {
       folder: '半生緣',
@@ -169,6 +169,45 @@ const SHELF = {
       bg: '#0f0f14',
       langs: ['中', 'EN'],
       categories: ['商業']
+    },
+    {
+      folder: '三體',
+      title: '三體',
+      titleEn: 'The Three-Body Problem',
+      author: '劉慈欣',
+      subtitle: '地球往事 · 第一部',
+      tagline: '一個文明對宇宙的第一聲呼喊',
+      seal: '三',
+      accent: '#cf4130',
+      bg: '#0b0d12',
+      langs: ['中', 'EN'],
+      categories: ['小說', '科幻']
+    },
+    {
+      folder: '黑暗森林',
+      title: '黑暗森林',
+      titleEn: 'The Dark Forest',
+      author: '劉慈欣',
+      subtitle: '地球往事 · 第二部',
+      tagline: '宇宙是一座黑暗森林，每個文明都是帶槍的獵人',
+      seal: '林',
+      accent: '#4a9b72',
+      bg: '#090d0b',
+      langs: ['中', 'EN'],
+      categories: ['小說', '科幻']
+    },
+    {
+      folder: '死神永生',
+      title: '死神永生',
+      titleEn: "Death's End",
+      author: '劉慈欣',
+      subtitle: '地球往事 · 第三部',
+      tagline: '死亡是唯一一座永遠亮著的燈塔',
+      seal: '死',
+      accent: '#5e79c4',
+      bg: '#080a10',
+      langs: ['中', 'EN'],
+      categories: ['小說', '科幻']
     }
   ]
 };
