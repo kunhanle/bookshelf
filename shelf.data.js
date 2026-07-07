@@ -208,6 +208,19 @@ const SHELF = {
       bg: '#080a10',
       langs: ['中', 'EN'],
       categories: ['小說', '科幻']
+    },
+    {
+      folder: '生存的十二條法則',
+      title: '生存的十二條法則',
+      titleEn: '12 Rules for Life',
+      author: 'Jordan B. Peterson',
+      subtitle: '混亂生活的解藥',
+      tagline: '在混亂中，站直',
+      seal: '序',
+      accent: '#bb8a3e',
+      bg: '#15161a',
+      langs: ['中', 'EN'],
+      categories: ['心理探究']
     }
   ]
 };
